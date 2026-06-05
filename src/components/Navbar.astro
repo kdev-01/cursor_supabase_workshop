@@ -1,6 +1,5 @@
 ---
 import { getLangFromUrl, useTranslations } from '../i18n/utils';
-import { Printer } from '@lucide/astro';
 
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
@@ -38,14 +37,6 @@ const esPath = '/es' + (pathWithoutLang === '' ? '' : pathWithoutLang);
             ES
           </a>
         </div>
-
-        <button 
-          onclick="window.print()" 
-          class="flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors border border-white/10 shadow-sm"
-        >
-          <Printer class="w-4 h-4" />
-          <span class="hidden sm:inline">{t('nav.print')}</span>
-        </button>
       </div>
     </div>
   </div>

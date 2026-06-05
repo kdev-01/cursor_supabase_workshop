@@ -1,9 +1,10 @@
 ---
 import BrandBadge from './BrandBadge.astro';
-import { ExternalLink, GitBranch, Triangle } from '@lucide/astro';
+import { ExternalLink, Triangle } from '@lucide/astro';
 import { Image } from 'astro:assets';
-import cursorLogo from '../assets/cursor.png';
+import cursorLogo from '../assets/cursor-logo.svg';
 import supabaseLogo from '../assets/supabase.png';
+import githubLogo from '../assets/github.svg';
 import { getLangFromUrl, useTranslations } from '../i18n/utils';
 
 const lang = getLangFromUrl(Astro.url);
@@ -15,7 +16,7 @@ const accounts = [
     name: 'GitHub',
     url: 'https://github.com/',
     colorClass: 'bg-zinc-800 text-white border-zinc-700',
-    icon: GitBranch,
+    imageAsset: githubLogo,
     instructions: t('acc.1.inst'),
     placeholder: t('acc.1.place')
   },
@@ -79,7 +80,7 @@ const accounts = [
               <div class="flex-1 space-y-4">
                 <div class="flex items-center justify-between">
                   <div class="flex items-center gap-3">
-                    <div class={`p-2 rounded-lg ${account.name === 'Cursor' ? 'bg-white text-black' : account.name === 'Supabase' ? 'bg-[#3ECF8E] text-black' : account.name === 'GitHub' ? 'bg-zinc-800 text-white' : 'bg-black text-white border border-zinc-800'}`}>
+                    <div class={`p-2 rounded-lg ${account.name === 'Cursor' || account.name === 'GitHub' ? 'bg-white text-black' : account.name === 'Supabase' ? 'bg-zinc-900 border border-[#3ECF8E]/20 text-[#3ECF8E]' : 'bg-black text-white border border-zinc-800'}`}>
                       {Icon ? (
                         <Icon class="w-6 h-6" />
                       ) : account.imageAsset && (
