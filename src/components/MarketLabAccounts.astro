@@ -5,6 +5,9 @@ import { Image } from 'astro:assets';
 import cursorLogo from '../assets/cursor-logo.svg';
 import supabaseLogo from '../assets/supabase.png';
 import githubLogo from '../assets/github.svg';
+import githubAccVideo from '../assets/mp4/steps_create_github_account.mp4';
+import cursorAccVideo from '../assets/mp4/steps_create_account_cursor.mp4';
+import supabaseAccVideo from '../assets/mp4/steps_create_supabase_account.mp4';
 import { getLangFromUrl, useTranslations } from '../i18n/utils';
 
 const lang = getLangFromUrl(Astro.url);
@@ -18,7 +21,8 @@ const accounts = [
     colorClass: 'bg-zinc-800 text-white border-zinc-700',
     imageAsset: githubLogo,
     instructions: t('acc.1.inst'),
-    placeholder: t('acc.1.place')
+    placeholder: t('acc.1.place'),
+    videoAsset: githubAccVideo
   },
   {
     id: 2,
@@ -27,7 +31,8 @@ const accounts = [
     colorClass: 'bg-white text-black border-zinc-200',
     imageAsset: cursorLogo,
     instructions: t('acc.2.inst'),
-    placeholder: t('acc.2.place')
+    placeholder: t('acc.2.place'),
+    videoAsset: cursorAccVideo
   },
   {
     id: 3,
@@ -36,7 +41,8 @@ const accounts = [
     colorClass: 'bg-brand-supabase text-white border-brand-supabase-dark',
     imageAsset: supabaseLogo,
     instructions: t('acc.3.inst'),
-    placeholder: t('acc.3.place')
+    placeholder: t('acc.3.place'),
+    videoAsset: supabaseAccVideo
   },
   {
     id: 4,
@@ -108,10 +114,32 @@ const accounts = [
               </div>
 
               <div class="w-full xl:w-[400px] flex-shrink-0">
-                <div class="bg-[#121212] border border-zinc-800 w-full aspect-video rounded-xl flex items-center justify-center text-zinc-500 font-medium text-sm text-center p-6 shadow-inner relative overflow-hidden group/image">
-                  <div class="absolute inset-0 bg-gradient-to-tr from-transparent via-white/5 to-transparent opacity-0 group-hover/image:opacity-100 transition-opacity"></div>
-                  <span>{account.placeholder}</span>
-                </div>
+                {account.videoAsset ? (
+                  <button class="video-trigger bg-[#121212] border border-zinc-800 w-full aspect-video rounded-xl flex items-center justify-center text-zinc-500 font-medium text-sm text-center shadow-inner relative overflow-hidden group/image cursor-pointer hover:scale-[1.02] transition-transform focus:outline-none focus:ring-2 focus:ring-white/20" data-video={account.videoAsset}>
+                    <video 
+                      src={account.videoAsset} 
+                      class="w-full h-full object-cover opacity-80 group-hover/image:opacity-100 transition-opacity"
+                      autoplay 
+                      loop 
+                      muted 
+                      playsinline
+                      preload="metadata"
+                    ></video>
+                    <div class="absolute inset-0 bg-gradient-to-tr from-transparent via-white/5 to-transparent opacity-0 group-hover/image:opacity-100 transition-opacity z-10 pointer-events-none"></div>
+                    <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover/image:opacity-100 transition-opacity z-20 pointer-events-none">
+                      <div class="bg-black/60 p-3 rounded-full backdrop-blur-md shadow-lg border border-white/10">
+                        <svg class="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+                        </svg>
+                      </div>
+                    </div>
+                  </button>
+                ) : (
+                  <div class="bg-[#121212] border border-zinc-800 w-full aspect-video rounded-xl flex items-center justify-center text-zinc-500 font-medium text-sm text-center p-6 shadow-inner relative overflow-hidden group/image">
+                    <div class="absolute inset-0 bg-gradient-to-tr from-transparent via-white/5 to-transparent opacity-0 group-hover/image:opacity-100 transition-opacity"></div>
+                    <span>{account.placeholder}</span>
+                  </div>
+                )}
               </div>
 
             </div>
@@ -121,4 +149,60 @@ const accounts = [
     })}
     </div>
   </div>
+
+  <dialog id="accounts-video-modal" class="backdrop:bg-black/90 bg-transparent p-0 max-w-5xl w-full rounded-2xl border border-white/10 shadow-2xl overflow-hidden shadow-black/50 m-auto focus:outline-none">
+    <div class="relative bg-zinc-950">
+      <video 
+        id="accounts-modal-video"
+        class="w-full aspect-video object-contain"
+        controls
+        loop
+        playsinline
+        preload="none"
+      ></video>
+      <button id="close-accounts-modal" class="absolute top-4 right-4 bg-black/50 hover:bg-black/80 text-white p-2.5 rounded-full transition-colors backdrop-blur-md z-50 border border-white/10 focus:outline-none focus:ring-2 focus:ring-white/20 cursor-pointer">
+        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+  </dialog>
 </section>
+
+<script>
+  const triggers = document.querySelectorAll('.video-trigger');
+  const modal = document.getElementById('accounts-video-modal') as HTMLDialogElement;
+  const closeModal = document.getElementById('close-accounts-modal');
+  const modalVideo = document.getElementById('accounts-modal-video') as HTMLVideoElement;
+
+  if (modal && closeModal && modalVideo) {
+    triggers.forEach(trigger => {
+      trigger.addEventListener('click', () => {
+        const videoSrc = trigger.getAttribute('data-video');
+        if (videoSrc) {
+          modalVideo.src = videoSrc;
+          modal.showModal();
+          modalVideo.play();
+        }
+      });
+    });
+
+    closeModal.addEventListener('click', () => {
+      modal.close();
+      modalVideo.pause();
+    });
+
+    modal.addEventListener('click', (e) => {
+      const dialogDimensions = modal.getBoundingClientRect();
+      if (
+        e.clientX < dialogDimensions.left ||
+        e.clientX > dialogDimensions.right ||
+        e.clientY < dialogDimensions.top ||
+        e.clientY > dialogDimensions.bottom
+      ) {
+        modal.close();
+        modalVideo.pause();
+      }
+    });
+  }
+</script>
