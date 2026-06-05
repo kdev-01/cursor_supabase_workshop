@@ -36,8 +36,19 @@ const t = useTranslations(lang);
   import confetti from 'canvas-confetti';
 
   const button = document.getElementById('cta-confetti-btn');
+  const repoUrl = 'https://github.com/lmiguelvargasf/cursor_workshop_ec_2026_06_06';
+  
   if (button) {
     button.addEventListener('click', () => {
+      const hasSeenConfetti = localStorage.getItem('hasSeenConfetti');
+      
+      if (hasSeenConfetti) {
+        window.open(repoUrl, '_blank');
+        return;
+      }
+
+      localStorage.setItem('hasSeenConfetti', 'true');
+      
       const duration = 3 * 1000;
       const animationEnd = Date.now() + duration;
       const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
@@ -50,7 +61,9 @@ const t = useTranslations(lang);
         const timeLeft = animationEnd - Date.now();
 
         if (timeLeft <= 0) {
-          return clearInterval(interval);
+          clearInterval(interval);
+          window.open(repoUrl, '_blank');
+          return;
         }
 
         const particleCount = 50 * (timeLeft / duration);

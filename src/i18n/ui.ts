@@ -7,6 +7,8 @@ export const defaultLang = 'en';
 
 export const ui = {
   en: {
+    'site.title': 'MarketLab | Cursor and Supabase Workshop',
+    'site.description': 'Join the Cursor and Supabase workshop and learn how to build MarketLab, a full-stack app from scratch. Set up your environment and discover how to code faster with AI.',
     'nav.print': 'Print Instructions',
     'hero.badge': 'AI Development Workshop',
     'hero.title.1': 'Preparation for',
@@ -38,11 +40,14 @@ export const ui = {
     'acc.4.place': 'Screenshot: Vercel Login screen with GitHub',
     'acc.link': 'Go to',
     'cta.title': 'Next Step',
-    'cta.desc': 'Once you have all your accounts and Cursor installed, the mentors will give you the repository link to run the magic installation script.',
+    'cta.desc': 'Once you have all your accounts and Cursor installed, go to the repository to run the magic installation script.',
+    'cta.repo.btn': 'Open Repository',
     'cta.btn': "I'm all set! ✨",
     'footer.text': 'Thanks for attending! Welcome to the KevinSquad 😎',
   },
   es: {
+    'site.title': 'MarketLab | Workshop de Cursor y Supabase',
+    'site.description': 'Únete al workshop de Cursor y Supabase y aprende a crear MarketLab, una aplicación completa desde cero. Configura tu entorno y descubre cómo programar más rápido con IA.',
     'nav.print': 'Imprimir Instrucciones',
     'hero.badge': 'Workshop de Desarrollo con IA',
     'hero.title.1': 'Preparación para el',
@@ -74,7 +79,8 @@ export const ui = {
     'acc.4.place': 'Captura: Pantalla de inicio de sesión de Vercel con GitHub',
     'acc.link': 'Ir a',
     'cta.title': 'Siguiente Paso',
-    'cta.desc': 'Una vez que tengas todas tus cuentas y Cursor instalado, los mentores te darán el enlace al repositorio para ejecutar el script de instalación mágico.',
+    'cta.desc': 'Una vez que tengas todas tus cuentas y Cursor instalado, ve al repositorio para ejecutar el script de instalación mágico.',
+    'cta.repo.btn': 'Abrir Repositorio',
     'cta.btn': '¡Ya tengo todo listo! ✨',
     'footer.text': '¡Gracias por asistir! Bienvenido a la KevinSquad 😎',
   },
