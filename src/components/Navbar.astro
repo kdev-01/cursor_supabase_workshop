@@ -1,0 +1,52 @@
+---
+import { getLangFromUrl, useTranslations } from '../i18n/utils';
+import { Printer } from '@lucide/astro';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+
+const pathname = Astro.url.pathname;
+const pathWithoutLang = pathname.startsWith('/es') ? pathname.replace('/es', '') : pathname;
+const enPath = pathWithoutLang === '' ? '/' : pathWithoutLang;
+const esPath = '/es' + (pathWithoutLang === '' ? '' : pathWithoutLang);
+---
+
+<nav class="sticky top-0 z-50 w-full backdrop-blur flex-none transition-colors duration-500 border-b border-zinc-800 bg-[#0a0a0a]/80 no-print">
+  <div class="max-w-7xl mx-auto">
+    <div class="py-4 border-b border-zinc-800/50 mx-4 lg:mx-8 px-4 sm:px-6 lg:px-8 flex items-center justify-between">
+      <div class="flex items-center gap-4">
+        <div class="font-bold text-xl tracking-tight text-white flex items-center gap-2">
+          <span>Cursor</span>
+          <span class="text-zinc-600">+</span>
+          <span class="text-brand-supabase">Supabase</span>
+        </div>
+      </div>
+      
+      <div class="flex items-center gap-4 md:gap-6">
+        <div class="flex items-center gap-2 text-sm font-medium">
+          <a 
+            href={enPath} 
+            class={`px-2 py-1 rounded transition-colors ${lang === 'en' ? 'bg-zinc-800 text-white' : 'text-zinc-400 hover:text-white'}`}
+          >
+            EN
+          </a>
+          <span class="text-zinc-700">|</span>
+          <a 
+            href={esPath} 
+            class={`px-2 py-1 rounded transition-colors ${lang === 'es' ? 'bg-zinc-800 text-white' : 'text-zinc-400 hover:text-white'}`}
+          >
+            ES
+          </a>
+        </div>
+
+        <button 
+          onclick="window.print()" 
+          class="flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors border border-white/10 shadow-sm"
+        >
+          <Printer class="w-4 h-4" />
+          <span class="hidden sm:inline">{t('nav.print')}</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</nav>

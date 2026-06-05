@@ -1,0 +1,49 @@
+@import "tailwindcss";
+
+@theme {
+  --color-brand-supabase: #3ecf8e;
+  --color-brand-supabase-dark: #24b47e;
+  --color-brand-cursor: #000000;
+  --color-brand-github: #24292e;
+  --color-brand-vercel: #000000;
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+@layer base {
+  body {
+    @apply bg-[#050505] text-zinc-300 font-sans antialiased selection:bg-brand-supabase/30 selection:text-white;
+    background-image: 
+      radial-gradient(circle at 15% 50%, rgba(62, 207, 142, 0.04), transparent 25%),
+      radial-gradient(circle at 85% 30%, rgba(255, 255, 255, 0.02), transparent 25%);
+  }
+  h1, h2, h3, h4, h5, h6 {
+    @apply text-white font-semibold tracking-tight;
+  }
+}
+
+@media print {
+  body {
+    @apply bg-white text-black bg-none;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply text-black;
+  }
+
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  
+  .no-print {
+    display: none !important;
+  }
+  
+  .print-card {
+    @apply border border-gray-300 shadow-none text-black bg-white break-inside-avoid;
+  }
+  
+  .print-text {
+    @apply text-gray-800;
+  }
+}

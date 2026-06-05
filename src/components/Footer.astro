@@ -1,0 +1,20 @@
+---
+import { getLangFromUrl, useTranslations } from '../i18n/utils';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+---
+
+<footer class="mt-auto border-t border-zinc-800/50 bg-[#0a0a0a] py-8 no-print">
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-4">
+    <p class="text-sm text-zinc-500">
+      {t('footer.text')}
+    </p>
+    <div class="flex items-center gap-6">
+      <div class="flex items-center gap-2">
+        <div class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+        <span class="text-sm text-zinc-400 font-medium tracking-wide uppercase">All systems operational</span>
+      </div>
+    </div>
+  </div>
+</footer>

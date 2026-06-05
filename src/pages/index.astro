@@ -1,11 +1,26 @@
 ---
-import Welcome from '../components/Welcome.astro';
 import Layout from '../layouts/Layout.astro';
+import Navbar from '../components/Navbar.astro';
+import MarketLabHero from '../components/MarketLabHero.astro';
+import MarketLabInstall from '../components/MarketLabInstall.astro';
+import MarketLabAccounts from '../components/MarketLabAccounts.astro';
+import MarketLabCTA from '../components/MarketLabCTA.astro';
+import Footer from '../components/Footer.astro';
+import { getLangFromUrl, useTranslations } from '../i18n/utils';
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
 ---
 
-<Layout>
-	<Welcome />
+<Layout title="MarketLab Workshop" lang={lang}>
+  <Navbar />
+  
+  <main class="flex-grow">
+    <MarketLabHero />
+    <MarketLabInstall />
+    <MarketLabAccounts />
+    <MarketLabCTA />
+  </main>
+
+  <Footer />
 </Layout>
