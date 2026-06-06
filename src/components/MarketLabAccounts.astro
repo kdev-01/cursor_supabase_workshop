@@ -8,6 +8,7 @@ import githubLogo from '../assets/github.svg';
 import githubAccVideo from '../assets/mp4/steps_create_github_account.mp4';
 import cursorAccVideo from '../assets/mp4/steps_create_account_cursor.mp4';
 import supabaseAccVideo from '../assets/mp4/steps_create_supabase_account.mp4';
+import vercelAccVideo from '../assets/mp4/steps_create_vercel_account.mp4';
 import { getLangFromUrl, useTranslations } from '../i18n/utils';
 
 const lang = getLangFromUrl(Astro.url);
@@ -51,7 +52,8 @@ const accounts = [
     colorClass: 'bg-black text-white border-zinc-800',
     icon: Triangle,
     instructions: t('acc.4.inst'),
-    placeholder: t('acc.4.place')
+    placeholder: t('acc.4.place'),
+    videoAsset: vercelAccVideo
   }
 ];
 ---
@@ -118,12 +120,11 @@ const accounts = [
                   <button class="video-trigger bg-[#121212] border border-zinc-800 w-full aspect-video rounded-xl flex items-center justify-center text-zinc-500 font-medium text-sm text-center shadow-inner relative overflow-hidden group/image cursor-pointer hover:scale-[1.02] transition-transform focus:outline-none focus:ring-2 focus:ring-white/20" data-video={account.videoAsset}>
                     <video 
                       src={account.videoAsset} 
-                      class="w-full h-full object-cover opacity-80 group-hover/image:opacity-100 transition-opacity"
-                      autoplay 
+                      class="preview-video-acc w-full h-full object-cover opacity-80 group-hover/image:opacity-100 transition-opacity"
                       loop 
                       muted 
                       playsinline
-                      preload="metadata"
+                      preload="none"
                     ></video>
                     <div class="absolute inset-0 bg-gradient-to-tr from-transparent via-white/5 to-transparent opacity-0 group-hover/image:opacity-100 transition-opacity z-10 pointer-events-none"></div>
                     <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover/image:opacity-100 transition-opacity z-20 pointer-events-none">
@@ -174,6 +175,23 @@ const accounts = [
   const modal = document.getElementById('accounts-video-modal') as HTMLDialogElement;
   const closeModal = document.getElementById('close-accounts-modal');
   const modalVideo = document.getElementById('accounts-modal-video') as HTMLVideoElement;
+
+  const previewVideos = document.querySelectorAll('.preview-video-acc');
+  if ('IntersectionObserver' in window) {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        const video = entry.target as HTMLVideoElement;
+        if (entry.isIntersecting) {
+          video.play().catch(e => console.warn('Autoplay prevented:', e));
+        } else {
+          video.pause();
+        }
+      });
+    }, { rootMargin: '50px' });
+    previewVideos.forEach(video => observer.observe(video));
+  } else {
+    previewVideos.forEach(video => (video as HTMLVideoElement).play().catch(() => {}));
+  }
 
   if (modal && closeModal && modalVideo) {
     triggers.forEach(trigger => {

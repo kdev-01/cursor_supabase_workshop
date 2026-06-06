@@ -1,0 +1,164 @@
+---
+import { Timer } from "@lucide/astro";
+import { getLangFromUrl, useTranslations } from "../i18n/utils";
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+---
+
+<div
+  id="workshop-countdown"
+  class="hidden mb-12 mx-auto max-w-md animate-fade-in-up"
+>
+  <div class="relative group/countdown">
+    <div
+      class="absolute -inset-1 bg-gradient-to-r from-brand-supabase/20 via-brand-supabase/40 to-brand-supabase/20 rounded-3xl blur-md opacity-30 animate-pulse"
+    >
+    </div>
+    <div
+      class="relative bg-[#0a0a0a]/80 backdrop-blur-xl rounded-3xl p-6 sm:p-8 border border-brand-supabase/20 shadow-[0_8px_32px_rgba(0,0,0,0.5)] flex flex-col items-center justify-center"
+    >
+      <div
+        class="flex items-center gap-2 text-zinc-400 text-xs sm:text-sm font-bold uppercase tracking-widest mb-4"
+      >
+        <Timer class="w-5 h-5 text-brand-supabase" />
+        <span>{t("countdown.title")}</span>
+      </div>
+      <div
+        class="flex items-center gap-6 text-white font-mono text-5xl sm:text-6xl font-bold tracking-tight"
+      >
+        <div class="flex flex-col items-center">
+          <span id="cd-hours" class="tabular-nums">00</span>
+          <span
+            class="text-xs text-zinc-500 uppercase font-sans mt-2 tracking-widest"
+            >{t("countdown.hours")}</span
+          >
+        </div>
+        <span class="text-zinc-600 mb-6 animate-pulse">:</span>
+        <div class="flex flex-col items-center">
+          <span id="cd-minutes" class="tabular-nums">00</span>
+          <span
+            class="text-xs text-zinc-500 uppercase font-sans mt-2 tracking-widest"
+            >{t("countdown.mins")}</span
+          >
+        </div>
+        <span class="text-zinc-600 mb-6 animate-pulse">:</span>
+        <div class="flex flex-col items-center">
+          <span
+            id="cd-seconds"
+            class="tabular-nums text-brand-supabase drop-shadow-[0_0_15px_rgba(62,207,142,0.5)]"
+            >00</span
+          >
+          <span
+            class="text-xs text-brand-supabase uppercase font-sans mt-2 tracking-widest"
+            >{t("countdown.secs")}</span
+          >
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  import confetti from "canvas-confetti";
+
+  const container = document.getElementById("workshop-countdown");
+  const hoursEl = document.getElementById("cd-hours");
+  const minutesEl = document.getElementById("cd-minutes");
+  const secondsEl = document.getElementById("cd-seconds");
+
+  const targetDate = new Date("2026-06-06T09:00:00-05:00").getTime();
+
+  function fireConfetti() {
+    const duration = 5 * 1000;
+    const animationEnd = Date.now() + duration;
+    const defaults = {
+      startVelocity: 30,
+      spread: 360,
+      ticks: 60,
+      zIndex: 9999,
+    };
+
+    function randomInRange(min: number, max: number) {
+      return Math.random() * (max - min) + min;
+    }
+
+    const interval: any = setInterval(function () {
+      const timeLeft = animationEnd - Date.now();
+
+      if (timeLeft <= 0) {
+        return clearInterval(interval);
+      }
+
+      const particleCount = 50 * (timeLeft / duration);
+      confetti(
+        Object.assign({}, defaults, {
+          particleCount,
+          origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 },
+        }),
+      );
+      confetti(
+        Object.assign({}, defaults, {
+          particleCount,
+          origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 },
+        }),
+      );
+    }, 250);
+  }
+
+  if (container) {
+    let timerInterval: any;
+
+    const updateCountdown = () => {
+      const now = new Date().getTime();
+      const distance = targetDate - now;
+
+      if (distance <= 0) {
+        if (timerInterval) clearInterval(timerInterval);
+
+        if (container && container.parentNode) {
+          container.remove();
+        }
+
+        let hasFired = false;
+        try {
+          hasFired = localStorage.getItem("countdownConfettiFired") === "true";
+        } catch (e) {
+          console.warn("Storage is restricted", e);
+        }
+
+        if (!hasFired && distance > -5000) {
+          try {
+            localStorage.setItem("countdownConfettiFired", "true");
+          } catch (e) {}
+          fireConfetti();
+        }
+        return;
+      }
+
+      if (container.classList.contains("hidden")) {
+        container.classList.remove("hidden");
+      }
+
+      const hours = Math.floor(distance / (1000 * 60 * 60));
+      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+      if (hoursEl) hoursEl.textContent = hours.toString().padStart(2, "0");
+      if (minutesEl)
+        minutesEl.textContent = minutes.toString().padStart(2, "0");
+      if (secondsEl)
+        secondsEl.textContent = seconds.toString().padStart(2, "0");
+    };
+
+    if (targetDate - new Date().getTime() > 0) {
+      try {
+        localStorage.removeItem("countdownConfettiFired");
+      } catch (e) {}
+      updateCountdown();
+      timerInterval = setInterval(updateCountdown, 1000);
+    } else {
+      updateCountdown();
+    }
+  }
+</script>
